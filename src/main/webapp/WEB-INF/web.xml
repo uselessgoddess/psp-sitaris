@@ -19,14 +19,14 @@
 	</context-param>
 	<context-param>
 		<param-name>jdbc-url</param-name>
-		<param-value>jdbc:postgresql://localhost/ist_project_db</param-value>
+		<param-value>jdbc:postgresql://localhost/porn</param-value>
 	</context-param>
 	<context-param>
 		<param-name>jdbc-user</param-name>
-		<param-value>root</param-value>
+		<param-value>postgres</param-value>
 	</context-param>
 	<context-param>
 		<param-name>jdbc-password</param-name>
-		<param-value>root</param-value>
+		<param-value>123</param-value>
 	</context-param>
 </web-app>

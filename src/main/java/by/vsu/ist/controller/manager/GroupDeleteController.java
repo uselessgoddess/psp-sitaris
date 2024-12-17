@@ -9,15 +9,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-@WebServlet("/manager/account/save.html")
+@WebServlet("/manager/group/delete.html")
 @MultipartConfig
-public class AccountSaveController extends HttpServlet {
+public class GroupDeleteController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
@@ -39,8 +38,8 @@ public class AccountSaveController extends HttpServlet {
 			account.photo = photo;
 			try(ServiceContainer container = new ServiceContainer()) {
 				AccountService accountService = container.getAccountServiceInstance();
-				accountService.save("employee",account);
-				resp.sendRedirect(req.getContextPath() + "/manager/account/list.html");
+				accountService.save("coaches",account);
+				resp.sendRedirect(req.getContextPath() + "/manager/coach/list.html");
 			} catch(SQLException e) {
 				throw new ServletException(e);
 			}

@@ -19,7 +19,7 @@ public class CashWithdrawController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
-			String accountNumber = req.getParameter("account");
+			String accountNumber = req.getParameter("employee");
 			if(accountNumber == null || accountNumber.isBlank()) throw new IllegalArgumentException();
 			long sum = SumRequestParser.parse(req);
 			try(ServiceContainer container = new ServiceContainer()) {

@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Optional;
 
-@WebServlet("/manager/account/edit.html")
-public class AccountEditController extends HttpServlet {
+@WebServlet("/manager/coach/edit.html")
+public class CoachEditController extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Long id = null;
 		try {
@@ -23,12 +23,12 @@ public class AccountEditController extends HttpServlet {
 		if(id != null) {
 			try(ServiceContainer container = new ServiceContainer()) {
 				AccountService accountService = container.getAccountServiceInstance();
-				Optional<Account> account = accountService.findById("employee", id);
-				account.ifPresent(value -> req.setAttribute("account", value));
+				Optional<Account> account = accountService.findById("coaches", id);
+				account.ifPresent(value -> req.setAttribute("coach", value));
 			} catch(SQLException e) {
 				throw new ServletException(e);
 			}
 		}
-		req.getRequestDispatcher("/WEB-INF/jsp/manager/account/edit.jsp").forward(req, resp);
+		req.getRequestDispatcher("/WEB-INF/jsp/manager/coach/edit.jsp").forward(req, resp);
 	}
 }

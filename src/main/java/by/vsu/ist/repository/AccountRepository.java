@@ -1,6 +1,8 @@
 package by.vsu.ist.repository;
 
 import by.vsu.ist.domain.Account;
+import by.vsu.ist.domain.Group;
+import by.vsu.ist.domain.GroupPair;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -10,13 +12,12 @@ import java.util.Optional;
 
 public class AccountRepository extends BaseRepository {
 	public Long create(Account account) throws SQLException {
-		String sql = "INSERT INTO \"account\"(\"number\", \"owner\") VALUES (?, ?)";
+		String sql = "INSERT INTO \"employee\"(\"name\") VALUES (?)";
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			statement.setString(1, account.getNumber());
-			statement.setString(2, account.getOwner());
+			statement.setString(1, account.getName());
 			statement.executeUpdate();
 			resultSet = statement.getGeneratedKeys();
 			resultSet.next();
@@ -27,8 +28,8 @@ public class AccountRepository extends BaseRepository {
 		}
 	}
 
-	public List<Account> readAll() throws SQLException {
-		String sql = "SELECT \"id\", \"number\", \"owner\", \"balance\", \"active\" FROM \"account\"";
+	public List<Account> readAll(String table) throws SQLException {
+		String sql = "SELECT \"id\", \"name\", \"photo\" FROM \"" + table + "\"";
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -38,10 +39,8 @@ public class AccountRepository extends BaseRepository {
 			while(resultSet.next()) {
 				Account account = new Account();
 				account.setId(resultSet.getLong("id"));
-				account.setNumber(resultSet.getString("number"));
-				account.setOwner(resultSet.getString("owner"));
-				account.setBalance(resultSet.getLong("balance"));
-				account.setActive(resultSet.getBoolean("active"));
+				account.setName(resultSet.getString("name"));
+				account.setPhoto(resultSet.getBytes("photo"));
 				accounts.add(account);
 			}
 			return accounts;
@@ -51,56 +50,79 @@ public class AccountRepository extends BaseRepository {
 		}
 	}
 
-	public List<Account> readActive() throws SQLException {
-		String sql = "SELECT \"id\", \"number\", \"owner\", \"balance\", \"active\" FROM \"account\" WHERE \"active\" = TRUE";
+	public List<Group> readGroups() throws SQLException {
+		String sql = "SELECT \"id\", \"course_id\", \"coach_id\", \"max_participants\" FROM \"groups\"";
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = getConnection().createStatement();
 			resultSet = statement.executeQuery(sql);
-			List<Account> accounts = new ArrayList<>();
+			List<Group> groups = new ArrayList<>();
 			while(resultSet.next()) {
-				Account account = new Account();
+				Group account = new Group();
 				account.setId(resultSet.getLong("id"));
-				account.setNumber(resultSet.getString("number"));
-				account.setOwner(resultSet.getString("owner"));
-				account.setBalance(resultSet.getLong("balance"));
-				account.setActive(resultSet.getBoolean("active"));
-				accounts.add(account);
+				var coachId = resultSet.getLong("coach_id");
+				account.setCoach(read("coaches", coachId).get());
+				account.setMaxParticipants(resultSet.getInt("max_participants"));
+				var rel = readGroupsInner();
+
+				var participants = new ArrayList<Account>();
+				for (GroupPair pair : rel) {
+					if (pair.groupId.equals(account.getId())) {
+						participants.add(read("employee", pair.accountId).get());
+					}
+				}
+				account.setParticipants(participants);
+
+				groups.add(account);
 			}
-			return accounts;
+			return groups;
 		} finally {
 			try { Objects.requireNonNull(resultSet).close(); } catch(Exception ignored) {}
 			try { Objects.requireNonNull(statement).close(); } catch(Exception ignored) {}
 		}
 	}
 
-	public Optional<Account> readByNumber(String number) throws SQLException {
-		String sql = "SELECT \"id\", \"number\", \"owner\", \"balance\", \"active\" FROM \"account\" WHERE \"number\" = ?";
+	public void addToGroup(Long groupId, Long accountId) throws SQLException {
+		if (read("employee", accountId).isEmpty()) {
+			return;
+		}
+
+		String sql = "INSERT INTO student_groups(employee_id, group_id) VALUES (?, ?) ON CONFLICT DO NOTHING";
 		PreparedStatement statement = null;
-		ResultSet resultSet = null;
 		try {
 			statement = getConnection().prepareStatement(sql);
-			statement.setString(1, number);
-			resultSet = statement.executeQuery();
-			Account account = null;
-			if(resultSet.next()) {
-				account = new Account();
-				account.setId(resultSet.getLong("id"));
-				account.setNumber(resultSet.getString("number"));
-				account.setOwner(resultSet.getString("owner"));
-				account.setBalance(resultSet.getLong("balance"));
-				account.setActive(resultSet.getBoolean("active"));
+			statement.setLong(1, accountId);
+			statement.setLong(2, groupId);
+			statement.executeUpdate();
+		} finally {
+			try { Objects.requireNonNull(statement).close(); } catch(Exception ignored) {}
+		}
+	}
+
+	public List<GroupPair> readGroupsInner() throws SQLException {
+		String sql = "SELECT \"employee_id\", \"group_id\" FROM \"student_groups\"";
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = getConnection().createStatement();
+			resultSet = statement.executeQuery(sql);
+			List<GroupPair> groups = new ArrayList<>();
+			while(resultSet.next()) {
+				GroupPair pair = new GroupPair();
+				pair.groupId = resultSet.getLong("group_id");
+				pair.accountId = resultSet.getLong("employee_id");
+				groups.add(pair);
 			}
-			return Optional.ofNullable(account);
+			return groups;
 		} finally {
 			try { Objects.requireNonNull(resultSet).close(); } catch(Exception ignored) {}
 			try { Objects.requireNonNull(statement).close(); } catch(Exception ignored) {}
 		}
 	}
 
-	public Optional<Account> read(Long id) throws SQLException {
-		String sql = "SELECT \"id\", \"number\", \"owner\", \"balance\", \"active\" FROM \"account\" WHERE \"id\" = ?";
+	public Optional<Account> read(String table, Long id) throws SQLException {
+		String sql = "SELECT \"id\", \"name\", \"photo\" FROM " + "\"" + table + "\"" + "WHERE \"id\" = ?";
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -111,10 +133,8 @@ public class AccountRepository extends BaseRepository {
 			if(resultSet.next()) {
 				account = new Account();
 				account.setId(resultSet.getLong("id"));
-				account.setNumber(resultSet.getString("number"));
-				account.setOwner(resultSet.getString("owner"));
-				account.setBalance(resultSet.getLong("balance"));
-				account.setActive(resultSet.getBoolean("active"));
+				account.setName(resultSet.getString("name"));
+				account.setPhoto(resultSet.getBytes("photo"));
 			}
 			return Optional.ofNullable(account);
 		} finally {
@@ -123,24 +143,23 @@ public class AccountRepository extends BaseRepository {
 		}
 	}
 
-	public void update(Account account) throws SQLException {
-		String sql = "UPDATE \"account\" SET \"number\" = ?, \"owner\" = ?, \"balance\" = ?, \"active\" = ? WHERE \"id\" = ?";
+	public void update(String table, Account account) throws SQLException {
+		String sql = "UPDATE \"" + table + "\" SET \"name\" = ?, \"photo\" = ? WHERE \"id\" = ?";
 		PreparedStatement statement = null;
 		try {
 			statement = getConnection().prepareStatement(sql);
-			statement.setString(1, account.getNumber());
-			statement.setString(2, account.getOwner());
-			statement.setLong(3, account.getBalance());
-			statement.setBoolean(4, account.isActive());
-			statement.setLong(5, account.getId());
+			statement.setString(1, account.getName());
+			statement.setBytes(2, account.getPhoto());
+			statement.setLong(3, account.getId());
 			statement.executeUpdate();
 		} finally {
 			try { Objects.requireNonNull(statement).close(); } catch(Exception ignored) {}
 		}
 	}
 
+
 	public void delete(Long id) throws SQLException {
-		String sql = "DELETE FROM \"account\" WHERE \"id\" = ?";
+		String sql = "DELETE FROM \"employee\" WHERE \"id\" = ?";
 		PreparedStatement statement = null;
 		try {
 			statement = getConnection().prepareStatement(sql);

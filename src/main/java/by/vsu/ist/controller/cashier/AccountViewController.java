@@ -20,9 +20,9 @@ public class AccountViewController extends HttpServlet {
 			Long id = Long.parseLong(req.getParameter("id"));
 			try(ServiceContainer container = new ServiceContainer()) {
 				AccountService accountService = container.getAccountServiceInstance();
-				Optional<Account> account = accountService.findByIdWithTransfers(id);
+				Optional<Account> account = accountService.findByIdWithTransfers("employee", id);
 				if(account.isPresent()) {
-					req.setAttribute("account", account.get());
+					req.setAttribute("employee", account.get());
 					req.getRequestDispatcher("/WEB-INF/jsp/cashier/account/view.jsp").forward(req, resp);
 				} else {
 					throw new IllegalArgumentException();

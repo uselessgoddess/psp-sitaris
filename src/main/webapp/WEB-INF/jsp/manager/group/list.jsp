@@ -16,27 +16,26 @@
 	<h1 class="header__title">Качалка «Тестостерон»</h1>
 </div>
 <div class="content">
-	<h2 class="page_title primary-color">Пользователи</h2>
+	<h2 class="page_title primary-color">Группы</h2>
 	<table class="data_table">
 		<tr class="secondary-background">
-			<th>ID</th>
-			<th>Имя</th>
-			<th>Фото</th>
+			<th>Имя тренера</th>
+			<th>Число участников</th>
+			<th>Список участников</th>
 			<th></th>
 		</tr>
-		<%--@elvariable id="accounts" type="java.util.List"--%>
-		<c:forEach var="account" items="${accounts}">
-			<%--@elvariable id="account" type="by.vsu.ist.domain.Account"--%>
+		<%--@elvariable id="groups" type="java.util.List"--%>
+		<c:forEach var="group" items="${groups}">
+			<%--@elvariable id="group" type="by.vsu.ist.domain.Group"--%>
 			<c:remove var="css_class"/>
 			<tr class="${css_class}">
-				<td>${account.id}</td>
-				<td>${account.name}</td>
-				<td><img alt="img" src="data:image/jpeg;base64,${account.base64Photo}" width="128" height="128"/></td>
+				<td>${group.coach.name}</td>
+				<td>${group.participants.size()} / ${group.maxParticipants}</td>
 				<td>
-                	<c:url var="url__manager_account_edit" value="${'/manager/account/edit.html'}">
-                		<c:param name="id" value="${account.id}"/>
+                	<c:url var="url__manager_group_edit" value="${'/manager/group/edit.html'}">
+                		<c:param name="id" value="${group.id}"/>
                 	</c:url>
-                	<a href="${url__manager_account_edit}" class="text-link primary-color">изменить</a>
+                	<a href="${url__manager_group_edit}" class="text-link primary-color">участники</a>
                 </td>
 			</tr>
 		</c:forEach>

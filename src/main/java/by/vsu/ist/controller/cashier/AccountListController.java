@@ -18,7 +18,7 @@ public class AccountListController extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try(ServiceContainer container = new ServiceContainer()) {
 			AccountService accountService = container.getAccountServiceInstance();
-			List<Account> accounts = accountService.findActive();
+			List<Account> accounts = accountService.findAll("employee");
 			req.setAttribute("accounts", accounts);
 			req.getRequestDispatcher("/WEB-INF/jsp/cashier/account/list.jsp").forward(req, resp);
 		} catch(SQLException e) {

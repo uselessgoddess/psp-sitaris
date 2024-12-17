@@ -9,38 +9,24 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-@WebServlet("/manager/account/save.html")
+@WebServlet("/manager/group/save.html")
 @MultipartConfig
-public class AccountSaveController extends HttpServlet {
+public class GroupSaveController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
-			Account account = new Account();
-			String idParam = req.getParameter("id");
-			if(idParam != null) {
-				account.setId(Long.parseLong(idParam));
-			}
+			var id = Long.parseLong( req.getParameter("id"));
+			var user = Long.parseLong(req.getParameter("user-id"));
 
-			var list = new ArrayList<String>();
-			req.getParameterNames().asIterator().forEachRemaining(list::add);
-			String name = req.getParameter("name");
-			if(name == null) throw new IllegalArgumentException("name is null: " + list);
-
-			var photoPart = req.getPart("photo");
-			var photo = photoPart.getInputStream().readAllBytes();
-
-			account.setName(name);
-			account.photo = photo;
 			try(ServiceContainer container = new ServiceContainer()) {
 				AccountService accountService = container.getAccountServiceInstance();
-				accountService.save("employee",account);
-				resp.sendRedirect(req.getContextPath() + "/manager/account/list.html");
+				accountService.accountRepository.addToGroup(id, user);
+				resp.sendRedirect(req.getContextPath() + "/manager/group/list.html");
 			} catch(SQLException e) {
 				throw new ServletException(e);
 			}

@@ -13,14 +13,14 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet("/manager/account/list.html")
-public class AccountListController extends HttpServlet {
+@WebServlet("/manager/group/list.html")
+public class GroupsListController extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try(ServiceContainer container = new ServiceContainer()) {
 			AccountService accountService = container.getAccountServiceInstance();
-			List<Account> accounts = accountService.findAll("employee");
-			req.setAttribute("accounts", accounts);
-			req.getRequestDispatcher("/WEB-INF/jsp/manager/account/list.jsp").forward(req, resp);
+			var groups = accountService.accountRepository.readGroups();
+			req.setAttribute("groups", groups);
+			req.getRequestDispatcher("/WEB-INF/jsp/manager/group/list.jsp").forward(req, resp);
 		} catch(SQLException e) {
 			throw new ServletException(e);
 		}

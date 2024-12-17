@@ -1,62 +1,49 @@
 package by.vsu.ist.domain;
 
-import java.util.List;
+import org.apache.commons.codec.binary.Base64;
+
+import java.nio.charset.StandardCharsets;
 
 public class Account extends Entity {
-	private String number;
-	private String owner;
-	private Long balance;
-	private boolean active;
-	private List<Transfer> transfers;
+	public String name;
+	public byte[] photo = {};
 
-	public final String getNumber() {
-		return number;
-	}
-
-	public final void setNumber(String number) {
-		this.number = number;
-	}
-
-	public final String getOwner() {
-		return owner;
-	}
-
-	public final void setOwner(String owner) {
-		this.owner = owner;
-	}
-
-	public final Long getBalance() {
-		return balance;
-	}
-
-	public final void setBalance(Long balance) {
-		this.balance = balance;
-	}
-
-	public final boolean isActive() {
-		return active;
-	}
-
-	public final void setActive(boolean active) {
-		this.active = active;
-	}
-
-	public List<Transfer> getTransfers() {
-		return transfers;
-	}
-
-	public void setTransfers(List<Transfer> transfers) {
-		this.transfers = transfers;
-	}
 
 	@Override
 	public String toString() {
 		return "Account{" +
 				"id=" + getId() +
-				", number='" + getNumber() + '\'' +
-				", owner='" + getOwner() + '\'' +
-				", balance=" + getBalance() +
-				", active=" + isActive() +
+				", name='" + name + '\'' +
+				", photo='" + photo.length + " bytes" + '\'' +
 				'}';
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public byte[] getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(byte[] photo) {
+		this.photo = photo;
+	}
+
+	public String getBase64Photo() {
+		if (photo == null) {
+			return "";
+		}
+
+		byte[] encodeBase64 = Base64.encodeBase64(getPhoto());
+		return new String(encodeBase64, StandardCharsets.UTF_8);
+	}
+
+	public void setBase64Photo(String base64) {
+		setPhoto(Base64.decodeBase64(base64));
 	}
 }

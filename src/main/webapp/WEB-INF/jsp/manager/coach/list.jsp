@@ -24,26 +24,26 @@
 			<th>Фото</th>
 			<th></th>
 		</tr>
-		<%--@elvariable id="accounts" type="java.util.List"--%>
-		<c:forEach var="account" items="${accounts}">
-			<%--@elvariable id="account" type="by.vsu.ist.domain.Account"--%>
+		<%--@elvariable id="coaches" type="java.util.List"--%>
+		<c:forEach var="coach" items="${coaches}">
+			<%--@elvariable id="coach" type="by.vsu.ist.domain.coach"--%>
 			<c:remove var="css_class"/>
 			<tr class="${css_class}">
-				<td>${account.id}</td>
-				<td>${account.name}</td>
-				<td><img alt="img" src="data:image/jpeg;base64,${account.base64Photo}" width="128" height="128"/></td>
+				<td>${coach.id}</td>
+				<td>${coach.name}</td>
+				<td><img alt="img" src="data:image/jpeg;base64,${coach.base64Photo}" width="128" height="128"/></td>
 				<td>
-                	<c:url var="url__manager_account_edit" value="${'/manager/account/edit.html'}">
-                		<c:param name="id" value="${account.id}"/>
+                	<c:url var="url__manager_coach_edit" value="${'/manager/coach/edit.html'}">
+                		<c:param name="id" value="${coach.id}"/>
                 	</c:url>
-                	<a href="${url__manager_account_edit}" class="text-link primary-color">изменить</a>
+                	<a href="${url__manager_coach_edit}" class="text-link primary-color">изменить</a>
                 </td>
 			</tr>
 		</c:forEach>
 	</table>
 	<div class="buttons_block">
-		<c:url var="url__manager_account_edit" value="${'/manager/account/edit.html'}"/>
-		<a href="${url__manager_account_edit}" class="button button__secondary">Открыть счёт</a>
+		<c:url var="url__manager_coach_edit" value="${'/manager/coach/edit.html'}"/>
+		<a href="${url__manager_coach_edit}" class="button button__secondary">Открыть счёт</a>
 	</div>
 </div>
 </body>
