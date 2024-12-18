@@ -30,7 +30,12 @@
 			<c:remove var="css_class"/>
 			<tr class="${css_class}">
 				<td>${group.coach.name}</td>
-				<td>${group.participants.size()} / ${group.maxParticipants}</td>
+				<td>
+				    ${group.participants.size()} / ${group.maxParticipants}
+				    <c:if test="${group.maxParticipants - group.participants.size() <= 15}">
+                        :(( мало места
+				    </c:if>
+				</td>
 				<td>
                 	<c:url var="url__manager_group_edit" value="${'/manager/group/edit.html'}">
                 		<c:param name="id" value="${group.id}"/>
