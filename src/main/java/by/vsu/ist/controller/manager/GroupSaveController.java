@@ -17,21 +17,32 @@ import java.util.ArrayList;
 @WebServlet("/manager/group/save.html")
 @MultipartConfig
 public class GroupSaveController extends HttpServlet {
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		try {
-			var id = Long.parseLong( req.getParameter("id"));
-			var user = Long.parseLong(req.getParameter("user-id"));
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            Long id = null;
+            String idParam = req.getParameter("id");
+            if(idParam != null) {
+                id = Long.parseLong(idParam);
+            }
 
-			try(ServiceContainer container = new ServiceContainer()) {
-				AccountService accountService = container.getAccountServiceInstance();
-				accountService.accountRepository.addToGroup(id, user);
-				resp.sendRedirect(req.getContextPath() + "/manager/group/list.html");
-			} catch(SQLException e) {
-				throw new ServletException(e);
-			}
-		} catch(IllegalArgumentException e) {
-			resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, e.toString());
-		}
-	}
+            try (ServiceContainer container = new ServiceContainer()) {
+                AccountService accountService = container.getAccountServiceInstance();
+
+                var coachId = req.getParameter("coach-id");
+                if (coachId != null && !coachId.isBlank()) {
+                    accountService.accountRepository.changeCoachOfGroup(id, Long.parseLong(coachId));
+                }
+                var userId = req.getParameter("user-id");
+                if (userId != null && !userId.isBlank()) {
+                    accountService.accountRepository.addToGroup(id, Long.parseLong(userId));
+                }
+                resp.sendRedirect(req.getContextPath() + "/manager/group/list.html");
+            } catch (SQLException e) {
+                throw new ServletException(e);
+            }
+        } catch (IllegalArgumentException e) {
+            resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, e.toString());
+        }
+    }
 }

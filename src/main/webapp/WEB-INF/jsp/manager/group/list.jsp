@@ -46,7 +46,7 @@
 		</c:forEach>
 	</table>
 	<div class="buttons_block">
-		<c:url var="url__manager_account_edit" value="${'/manager/account/edit.html'}"/>
+		<c:url var="url__manager_account_edit" value="${'/manager/group/edit.html'}"/>
 		<a href="${url__manager_account_edit}" class="button button__secondary">Открыть счёт</a>
 	</div>
 </div>

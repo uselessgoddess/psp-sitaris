@@ -83,6 +83,28 @@ public class AccountRepository extends BaseRepository {
 		}
 	}
 
+	public void changeCoachOfGroup(Long groupId, Long coachId) throws SQLException {
+		String sql;
+
+		if (groupId != null) {
+			sql = "UPDATE groups SET coach_id=? WHERE id=?";
+		} else {
+			sql = "INSERT INTO groups (coach_id) VALUES (?)";
+		}
+
+		PreparedStatement statement = null;
+		try {
+			statement = getConnection().prepareStatement(sql);
+			statement.setLong(1, coachId);
+			if (groupId != null) {
+				statement.setLong(2, groupId);
+			}
+			statement.executeUpdate();
+		} finally {
+			try { Objects.requireNonNull(statement).close(); } catch(Exception ignored) {}
+		}
+	}
+
 	public void addToGroup(Long groupId, Long accountId) throws SQLException {
 		if (read("employee", accountId).isEmpty()) {
 			return;
