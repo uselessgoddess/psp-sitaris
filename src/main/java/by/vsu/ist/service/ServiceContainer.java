@@ -58,7 +58,7 @@ public class ServiceContainer implements AutoCloseable {
 	private Connection connection;
 	private Connection getConnectionInstance() throws SQLException {
 		if(connection == null) {
-			ConnectionPool.getInstance().getConnection();
+			connection = ConnectionPool.getInstance().getConnection();
 		}
 		return connection;
 	}

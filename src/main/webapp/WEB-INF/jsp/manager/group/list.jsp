@@ -7,9 +7,8 @@
 <html lang="ru">
 <head>
 	<meta charset="UTF-8">
-	<title>Гринготтс :: Банковские счета</title>
-	<c:url var="url__style_css" value="${'/style.css'}"/>
-	<link rel="stylesheet" href="${url__style_css}">
+	<title>Качалка :: Группы</title>
+
 	<c:url var="url__style_manager_css" value="${'/style-manager.css'}"/>
 	<link rel="stylesheet" href="${url__style_manager_css}">
 </head>

@@ -6,8 +6,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Гринготтс :: Банковские счета</title>
-	<c:url var="url__style_css" value="${'/style.css'}"/>
-	<link rel="stylesheet" href="${url__style_css}">
+
 	<c:url var="url__style_cashier_css" value="${'/style-cashier.css'}"/>
 	<link rel="stylesheet" href="${url__style_cashier_css}">
 	<c:url var="url__popup_css" value="${'/popup.css'}"/>

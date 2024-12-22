@@ -18,7 +18,7 @@ public class ApplicationLifecycleListener implements ServletContextListener {
 			String jdbcUser     = context.getInitParameter("jdbc-user");
 			String jdbcPassword = context.getInitParameter("jdbc-password");
 			DatabaseConnector.init(jdbcDriver, jdbcUrl, jdbcUser, jdbcPassword);
-			int poolSize = 1;
+			int poolSize = 6;
 			ConnectionPool.getInstance().init(poolSize);
 
 		} catch(ClassNotFoundException e) {

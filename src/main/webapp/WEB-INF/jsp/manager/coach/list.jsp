@@ -7,8 +7,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Качалка :: Тестостерон</title>
-	<c:url var="url__style_css" value="${'/style.css'}"/>
-	<link rel="stylesheet" href="${url__style_css}">
+
 	<c:url var="url__style_manager_css" value="${'/style-manager.css'}"/>
 	<link rel="stylesheet" href="${url__style_manager_css}">
 </head>
@@ -17,7 +16,7 @@
 	<h1 class="header__title">Качалка «Тестостерон»</h1>
 </div>
 <div class="content">
-	<h2 class="page_title primary-color">Пользователи</h2>
+	<h2 class="page_title primary-color">Тренера (не играют)</h2>
 	<table class="data_table">
 		<tr class="secondary-background">
 			<th>ID</th>
