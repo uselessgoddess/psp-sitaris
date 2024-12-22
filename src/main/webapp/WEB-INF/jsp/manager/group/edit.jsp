@@ -45,14 +45,14 @@
     	</c:forEach>
     </table>
 	<form action="${url__manager_group_save}" method="post" class="form" enctype="multipart/form-data">
-		<c:if test="${not empty group}">
-			<input type="hidden" name="id" value="${group.id}">
-		</c:if>
-		<div class="input_block">
+    	<c:if test="${not empty group}">
+    		<input type="hidden" name="id" value="${group.id}">
+    	</c:if>
+    	<div class="input_block">
         	<label for="coach-id">ID тренера:</label>
         	<input required type="text" id="coach-id" name="coach-id" value="${group.coach.id}">
         </div>
-		<div class="input_block">
+    	<div class="input_block">
         	<label for="user-id">ID ученика:</label>
         	<input type="text" id="user-id" name="user-id" value="">
         </div>
@@ -68,20 +68,19 @@
         	<label for="place">Место:</label>
         	<input required type="text" id="place" name="place" value="${group.place}">
         </div>
-		<div class="buttons_block">
-			<button type="submit" class="button button__primary">Изменить</button>
-			<c:url var="url__manager_group_list" value="${'/manager/group/list.html'}"/>
-		</div>
-	</form>
-	<form action="${url__manager_group_delete}" method="post" class="form" enctype="multipart/form-data">
-	    <c:if test="${not empty group}">
-    		<input required name="id" value="${group.id}">
-    	</c:if>
     	<div class="buttons_block">
-        	<button type="submit" class="button button__primary">Удалить</button>
-        	<c:url var="url__manager_group_list" value="${'/manager/group/list.html'}"/>
-        </div>
+    		<button type="submit" class="button button__primary">Изменить</button>
+    		<c:url var="url__manager_group_list" value="${'/manager/group/list.html'}"/>
+    	</div>
     </form>
+    <c:if test="${not empty group}">
+        <form action="${url__manager_group_delete}" method="post" class="form" enctype="multipart/form-data">
+            <div class="buttons_block">
+                <button type="submit" class="button button__primary">Удалить</button>
+                <c:url var="url__manager_group_list" value="${'/manager/group/list.html'}"/>
+            </div>
+        </form>
+    </c:if>
     <a href="${url__manager_group_list}" class="button button__secondary">Назад</a>
 </div>
 </body>

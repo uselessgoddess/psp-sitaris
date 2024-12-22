@@ -1,11 +1,12 @@
 <%@page contentType="text/html;charset=UTF-8"%>
 <%@taglib prefix="c" uri="jakarta.tags.core"%>
 <%@taglib prefix="fmt" uri="jakarta.tags.fmt"%>
+<%--@elvariable id="admin" type="String"--%>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 	<meta charset="UTF-8">
-	<title>Гринготтс :: Банковские счета</title>
+	<title>Качалка :: Тестостерон</title>
 	<c:url var="url__style_css" value="${'/style.css'}"/>
 	<link rel="stylesheet" href="${url__style_css}">
 	<c:url var="url__style_manager_css" value="${'/style-manager.css'}"/>
@@ -41,10 +42,13 @@
 			</tr>
 		</c:forEach>
 	</table>
-	<div class="buttons_block">
-		<c:url var="url__manager_account_edit" value="${'/manager/account/edit.html'}"/>
-		<a href="${url__manager_account_edit}" class="button button__secondary">Открыть счёт</a>
-	</div>
+
+    <c:if test="${not empty manager}">
+        <div class="buttons_block">
+            <c:url var="url__manager_coach_edit" value="${'/manager/coach/edit.html'}"/>
+            <a href="${url__manager_coach_edit}" class="button button__secondary">Новый тренер</a>
+        </div>
+    </c:if>
 </div>
 </body>
 </html>

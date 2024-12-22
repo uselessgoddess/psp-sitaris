@@ -22,6 +22,15 @@ public class GroupsListController extends HttpServlet {
             var groups = accountService.accountRepository.readGroups();
             req.setAttribute("groups", groups);
 
+            if (req.getParameter("admin") != null) {
+                req.setAttribute("admin", "admin");
+                req.setAttribute("manager", "manager");
+            }
+
+            if (req.getParameter("manager") != null) {
+                req.setAttribute("manager", "manager");
+            }
+
             var conflicts = new ArrayList<String>();
             {
                 for (var group : groups) {

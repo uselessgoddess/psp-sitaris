@@ -16,6 +16,10 @@ import java.util.List;
 @WebServlet("/manager/coach/list.html")
 public class CoachListController extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		if (req.getParameter("admin") != null) {
+			req.setAttribute("admin", "admin");
+		}
+
 		try(ServiceContainer container = new ServiceContainer()) {
 			AccountService accountService = container.getAccountServiceInstance();
 			List<Account> accounts = accountService.findAll("coaches");

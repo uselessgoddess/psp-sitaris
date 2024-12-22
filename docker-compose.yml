@@ -1,0 +1,13 @@
+name: "gym"
+
+services:
+  postgres:
+    image: postgres
+    container_name: goal
+    restart: always
+    ports:
+      - "5555:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: porn
