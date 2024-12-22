@@ -49,12 +49,24 @@
 			<input type="hidden" name="id" value="${group.id}">
 		</c:if>
 		<div class="input_block">
-        	<label for="coach-id">ID ученика:</label>
-        	<input type="text" id="coach-id" name="coach-id" value="${group.coach.id}">
+        	<label for="coach-id">ID тренера:</label>
+        	<input required type="text" id="coach-id" name="coach-id" value="${group.coach.id}">
         </div>
 		<div class="input_block">
         	<label for="user-id">ID ученика:</label>
         	<input type="text" id="user-id" name="user-id" value="">
+        </div>
+        <div class="input_block">
+        	<label for="max-participants">Число участников:</label>
+        	<input required type="number" id="max-participants" name="max-participants" value="${group.maxParticipants}">
+        </div>
+        <div class="input_block">
+        	<label for="date">Дата:</label>
+        	<input required type="text" id="date" name="date" value="${group.date}">
+        </div>
+        <div class="input_block">
+        	<label for="place">Место:</label>
+        	<input required type="text" id="place" name="place" value="${group.place}">
         </div>
 		<div class="buttons_block">
 			<button type="submit" class="button button__primary">Изменить</button>
@@ -63,7 +75,7 @@
 	</form>
 	<form action="${url__manager_group_delete}" method="post" class="form" enctype="multipart/form-data">
 	    <c:if test="${not empty group}">
-    		<input type="hidden" name="id" value="${group.id}">
+    		<input required name="id" value="${group.id}">
     	</c:if>
     	<div class="buttons_block">
         	<button type="submit" class="button button__primary">Удалить</button>

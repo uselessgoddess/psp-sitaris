@@ -51,7 +51,7 @@ public class AccountRepository extends BaseRepository {
 	}
 
 	public List<Group> readGroups() throws SQLException {
-		String sql = "SELECT \"id\", \"course_id\", \"coach_id\", \"max_participants\" FROM \"groups\"";
+		String sql = "SELECT \"id\", \"course_id\", \"coach_id\", \"max_participants\", \"date\", \"place\" FROM \"groups\"";
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -64,6 +64,8 @@ public class AccountRepository extends BaseRepository {
 				var coachId = resultSet.getLong("coach_id");
 				account.setCoach(read("coaches", coachId).get());
 				account.setMaxParticipants(resultSet.getInt("max_participants"));
+				account.setDate(resultSet.getString("date"));
+				account.setPlace(resultSet.getString("place"));
 				var rel = readGroupsInner();
 
 				var participants = new ArrayList<Account>();
@@ -83,21 +85,24 @@ public class AccountRepository extends BaseRepository {
 		}
 	}
 
-	public void changeCoachOfGroup(Long groupId, Long coachId) throws SQLException {
+	public void changeCoachOfGroup(Long groupId, Long coachId, int max, String date, String place) throws SQLException {
 		String sql;
 
 		if (groupId != null) {
-			sql = "UPDATE groups SET coach_id=? WHERE id=?";
+			sql = "UPDATE groups SET coach_id = ?, max_participants = ?, date = ?, place = ? WHERE id = ?";
 		} else {
-			sql = "INSERT INTO groups (coach_id) VALUES (?)";
+			sql = "INSERT INTO groups (coach_id, max_participants, date, place) VALUES (?, ?, ?, ?)";
 		}
 
 		PreparedStatement statement = null;
 		try {
 			statement = getConnection().prepareStatement(sql);
 			statement.setLong(1, coachId);
+			statement.setInt(2, max);
+			statement.setString(3, date);
+			statement.setString(4, place);
 			if (groupId != null) {
-				statement.setLong(2, groupId);
+				statement.setLong(5, groupId);
 			}
 			statement.executeUpdate();
 		} finally {
@@ -140,6 +145,32 @@ public class AccountRepository extends BaseRepository {
 		} finally {
 			try { Objects.requireNonNull(resultSet).close(); } catch(Exception ignored) {}
 			try { Objects.requireNonNull(statement).close(); } catch(Exception ignored) {}
+		}
+	}
+
+	public void deleteGroup(Long id) throws SQLException {
+		{
+			String sql = "DELETE FROM \"groups\" WHERE \"id\" = ?";
+			PreparedStatement statement = null;
+			try {
+				statement = getConnection().prepareStatement(sql);
+				statement.setLong(1, id);
+				statement.executeUpdate();
+			} finally {
+				try { Objects.requireNonNull(statement).close(); } catch(Exception ignored) {}
+			}
+		}
+
+		{
+			String sql = "DELETE FROM \"student_groups\" WHERE \"group_id\" = ?";
+			PreparedStatement statement = null;
+			try {
+				statement = getConnection().prepareStatement(sql);
+				statement.setLong(1, id);
+				statement.executeUpdate();
+			} finally {
+				try { Objects.requireNonNull(statement).close(); } catch(Exception ignored) {}
+			}
 		}
 	}
 

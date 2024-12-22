@@ -6,6 +6,8 @@ public class Group extends Entity {
 	private Account coach;
 	private List<Account> participants;
 	private int maxParticipants;
+	private String date;
+	private String place;
 
 
 	@Override
@@ -15,6 +17,8 @@ public class Group extends Entity {
 				", name='" + coach + '\'' +
 				", name='" + participants + '\'' +
 				", name='" + maxParticipants + '\'' +
+				", name='" + date + '\'' +
+				", name='" + place + '\'' +
 				'}';
 	}
 
@@ -41,4 +45,20 @@ public class Group extends Entity {
     public void setParticipants(List<Account> participants) {
         this.participants = participants;
     }
+
+	public String getDate() {
+		return date;
+	}
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
+	public String getPlace() {
+		return place;
+	}
 }

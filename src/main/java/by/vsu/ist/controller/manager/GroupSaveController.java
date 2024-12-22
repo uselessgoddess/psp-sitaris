@@ -22,20 +22,32 @@ public class GroupSaveController extends HttpServlet {
         try {
             Long id = null;
             String idParam = req.getParameter("id");
-            if(idParam != null) {
+            if (idParam != null) {
                 id = Long.parseLong(idParam);
             }
 
             try (ServiceContainer container = new ServiceContainer()) {
                 AccountService accountService = container.getAccountServiceInstance();
 
+                var max = Integer.parseInt(req.getParameter("max-participants"));
+                var date = req.getParameter("date");
+                var place = req.getParameter("place");
+
                 var coachId = req.getParameter("coach-id");
                 if (coachId != null && !coachId.isBlank()) {
-                    accountService.accountRepository.changeCoachOfGroup(id, Long.parseLong(coachId));
+                    accountService.accountRepository.changeCoachOfGroup(
+                            id, Long.parseLong(coachId), max, date, place);
                 }
                 var userId = req.getParameter("user-id");
                 if (userId != null && !userId.isBlank()) {
-                    accountService.accountRepository.addToGroup(id, Long.parseLong(userId));
+                    Long finalId = id;
+                    var group = accountService.accountRepository.readGroups().stream().filter(it -> it.getId().equals(finalId)).findFirst();
+
+                    if (group.isPresent() && group.get().getParticipants().size() < max) {
+                        accountService.accountRepository.addToGroup(id, Long.parseLong(userId));
+                    } else {
+                        resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "max participants limit reached");
+                    }
                 }
                 resp.sendRedirect(req.getContextPath() + "/manager/group/list.html");
             } catch (SQLException e) {

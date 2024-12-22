@@ -20,26 +20,19 @@ public class GroupDeleteController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
-			Account account = new Account();
+			Long id = null;
 			String idParam = req.getParameter("id");
-			if(idParam != null) {
-				account.setId(Long.parseLong(idParam));
+			if (idParam != null) {
+				id = Long.parseLong(idParam);
 			}
 
-			var list = new ArrayList<String>();
-			req.getParameterNames().asIterator().forEachRemaining(list::add);
-			String name = req.getParameter("name");
-			if(name == null) throw new IllegalArgumentException("name is null: " + list);
 
-			var photoPart = req.getPart("photo");
-			var photo = photoPart.getInputStream().readAllBytes();
-
-			account.setName(name);
-			account.photo = photo;
 			try(ServiceContainer container = new ServiceContainer()) {
 				AccountService accountService = container.getAccountServiceInstance();
-				accountService.save("coaches",account);
-				resp.sendRedirect(req.getContextPath() + "/manager/coach/list.html");
+
+				accountService.accountRepository.deleteGroup(id);
+
+				resp.sendRedirect(req.getContextPath() + "/manager/group/list.html");
 			} catch(SQLException e) {
 				throw new ServletException(e);
 			}
