@@ -1,6 +1,6 @@
 package by.vsu.ist.controller.cashier;
 
-import by.vsu.ist.service.ServiceContainer;
+import by.vsu.ist.service.ServiceFactory;
 import by.vsu.ist.service.TransferService;
 import by.vsu.ist.web.SumRequestParser;
 import jakarta.servlet.ServletException;
@@ -26,7 +26,7 @@ public class TransferController extends HttpServlet {
 			long sum = SumRequestParser.parse(req);
 			String purpose = req.getParameter("purpose");
 			if(purpose != null && purpose.isBlank()) purpose = null;
-			try(ServiceContainer container = new ServiceContainer()) {
+			try(ServiceFactory container = ServiceFactory.getInstance()) {
 				TransferService transferService = container.getTransferServiceInstance();
 				transferService.transfer(senderNumber, receiverNumber, sum, purpose);
 				resp.sendRedirect(req.getContextPath() + "/cashier/account/list.html?msg=" + URLEncoder.encode("Операция выполнена успешно", StandardCharsets.UTF_8));

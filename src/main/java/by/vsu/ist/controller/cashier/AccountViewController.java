@@ -2,7 +2,7 @@ package by.vsu.ist.controller.cashier;
 
 import by.vsu.ist.domain.Account;
 import by.vsu.ist.service.AccountService;
-import by.vsu.ist.service.ServiceContainer;
+import by.vsu.ist.service.ServiceFactory;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,7 +18,7 @@ public class AccountViewController extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
 			Long id = Long.parseLong(req.getParameter("id"));
-			try(ServiceContainer container = new ServiceContainer()) {
+			try(ServiceFactory container = ServiceFactory.getInstance()) {
 				AccountService accountService = container.getAccountServiceInstance();
 				Optional<Account> account = accountService.findByIdWithTransfers("employee", id);
 				if(account.isPresent()) {

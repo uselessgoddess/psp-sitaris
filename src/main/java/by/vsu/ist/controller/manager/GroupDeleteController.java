@@ -2,7 +2,7 @@ package by.vsu.ist.controller.manager;
 
 import by.vsu.ist.domain.Account;
 import by.vsu.ist.service.AccountService;
-import by.vsu.ist.service.ServiceContainer;
+import by.vsu.ist.service.ServiceFactory;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -27,7 +27,7 @@ public class GroupDeleteController extends HttpServlet {
 			}
 
 
-			try(ServiceContainer container = new ServiceContainer()) {
+			try(ServiceFactory container = ServiceFactory.getInstance()) {
 				AccountService accountService = container.getAccountServiceInstance();
 
 				accountService.accountRepository.deleteGroup(id);

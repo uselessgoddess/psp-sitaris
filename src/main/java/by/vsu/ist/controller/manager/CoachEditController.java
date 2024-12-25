@@ -2,7 +2,7 @@ package by.vsu.ist.controller.manager;
 
 import by.vsu.ist.domain.Account;
 import by.vsu.ist.service.AccountService;
-import by.vsu.ist.service.ServiceContainer;
+import by.vsu.ist.service.ServiceFactory;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -21,7 +21,7 @@ public class CoachEditController extends HttpServlet {
 			id = Long.parseLong(req.getParameter("id"));
 		} catch(NumberFormatException ignored) {}
 		if(id != null) {
-			try(ServiceContainer container = new ServiceContainer()) {
+			try(ServiceFactory container = ServiceFactory.getInstance()) {
 				AccountService accountService = container.getAccountServiceInstance();
 				Optional<Account> account = accountService.findById("coaches", id);
 				account.ifPresent(value -> req.setAttribute("coach", value));

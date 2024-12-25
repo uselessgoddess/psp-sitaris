@@ -1,6 +1,6 @@
 package by.vsu.ist.controller.cashier;
 
-import by.vsu.ist.service.ServiceContainer;
+import by.vsu.ist.service.ServiceFactory;
 import by.vsu.ist.service.TransferService;
 import by.vsu.ist.web.SumRequestParser;
 import jakarta.servlet.ServletException;
@@ -22,7 +22,7 @@ public class CashWithdrawController extends HttpServlet {
 			String accountNumber = req.getParameter("employee");
 			if(accountNumber == null || accountNumber.isBlank()) throw new IllegalArgumentException();
 			long sum = SumRequestParser.parse(req);
-			try(ServiceContainer container = new ServiceContainer()) {
+			try(ServiceFactory container = ServiceFactory.getInstance()) {
 				TransferService transferService = container.getTransferServiceInstance();
 				transferService.withdrawCash(accountNumber, sum);
 				resp.sendRedirect(req.getContextPath() + "/cashier/account/list.html?msg=" + URLEncoder.encode("Операция выполнена успешно", StandardCharsets.UTF_8));

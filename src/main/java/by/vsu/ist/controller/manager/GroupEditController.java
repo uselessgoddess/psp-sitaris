@@ -3,7 +3,7 @@ package by.vsu.ist.controller.manager;
 import by.vsu.ist.domain.Account;
 import by.vsu.ist.domain.Group;
 import by.vsu.ist.service.AccountService;
-import by.vsu.ist.service.ServiceContainer;
+import by.vsu.ist.service.ServiceFactory;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -23,7 +23,7 @@ public class GroupEditController extends HttpServlet {
         } catch (NumberFormatException ignored) {
         }
         if (id != null) {
-            try (ServiceContainer container = new ServiceContainer()) {
+            try(ServiceFactory container = ServiceFactory.getInstance()) {
                 AccountService accountService = container.getAccountServiceInstance();
                 Long finalId = id;
                 Optional<Group> account = accountService.accountRepository.readGroups().stream().filter(group -> group.getId().equals(finalId)).findFirst();

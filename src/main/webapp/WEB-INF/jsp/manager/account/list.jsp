@@ -42,10 +42,10 @@
 		</c:forEach>
 	</table>
 
-    <c:if test="${not empty manager}">
+    <c:if test="${not empty admin}">
         <div class="buttons_block">
-            <c:url var="url__manager_coach_edit" value="${'/manager/coach/edit.html'}"/>
-            <a href="${url__manager_coach_edit}" class="button button__secondary">Новый тренер</a>
+            <c:url var="url__manager_coach_edit" value="${'/manager/account/edit.html'}"/>
+            <a href="${url__manager_coach_edit}" class="button button__secondary">Новый пользователь</a>
         </div>
     </c:if>
 </div>
